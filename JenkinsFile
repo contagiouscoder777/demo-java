@@ -18,7 +18,7 @@ pipeline {
             steps {
                 // Deploy war/ear to Tomcat server
                 withCredentials([
-                    usernamePassword(credentialsId: 'tomcat-credentials', usernameVariable: 'TOMCAT_USERNAME', passwordVariable: 'TOMCAT_PASSWORD')
+                    usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
                 ]) {
                     sh """
                         cp target/*.war ${TOMCAT_HOME}/webapps/
