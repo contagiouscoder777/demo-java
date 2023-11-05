@@ -2,26 +2,22 @@ pipeline {
     agent any
 
     tools {
-        maven 'MAVEN_HOME' // Assuming 'MAVEN_HOME' is the name of the Maven tool in your Jenkins configuration
+        maven 'MAVEN_HOME'
     }
 
     stages {
         stage('Build') {
             steps {
-                script {
-                    sh 'mvn clean package'
-                }
+                bat 'mvn clean package'
             }
         }
 
         stage('Deployment') {
             steps {
-                script {
-                    withCredentials([
-                        usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
-                    ]) {
-                        deploy contextPath: 'mvnPipeline', war: '**/*.war'
-                    }
+                withCredentials([
+                    usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
+                ]) {
+                    bat "curl -u ${tomcat}:${password} -T target/*.war http://your-tomcat-server:8080/manager/text/deploy?path=/contextPath"
                 }
             }
         }
