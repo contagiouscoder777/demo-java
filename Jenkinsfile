@@ -1,15 +1,15 @@
 pipeline {
     agent any
 
-    environment {
-        MAVEN_HOME = 'C:\Users\salma\Desktop\jenkins\apache-maven-3.9.5'
+    tools {
+        maven 'MAVEN_HOME' // Assuming 'MAVEN_HOME' is the name of the Maven tool in your Jenkins configuration
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
-                    sh '${MAVEN_HOME}/bin/mvn clean package'
+                    sh 'mvn clean package'
                 }
             }
         }
