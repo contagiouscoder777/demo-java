@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven-3.8.4'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -23,7 +27,7 @@ pipeline {
                         usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
                     ]) {
                         sh """
-                            curl -T target/*.war http://${tomcat}:${password}@localhost:7080/manager/text/deploy?path=/mvnPipeline
+                            curl -u ${tomcat}:${password} -T target/*.war http://your-tomcat-server:8080/manager/text/deploy?path=/contextPath
                         """
                     }
                 }
@@ -31,4 +35,3 @@ pipeline {
         }
     }
 }
-
