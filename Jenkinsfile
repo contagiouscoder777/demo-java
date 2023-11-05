@@ -1,31 +1,25 @@
-pipeline {
-    agent any
+pipeline{
+	agent any
+	tools{
+		maven 'MAVEN_HOME'
+	}
 
-    tools {
-        maven 'MAVEN_HOME'
-    }
-
-    stages {
-        stage('Build') {
-    steps {
-        script {
-            bat 'mvn clean package'
-            dir('target') {
-                bat 'dir'
-            }
-        }
-    }
-}
-
-
-        stage('Deployment') {
-            steps {
-                withCredentials([
-                    usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
-                ]) {
-                    bat "curl -u ${tomcat}:${password} -T target/*.war http://localhost:7080/manager/text/deploy?path=/mvnpipelines"
-                }
-            }
-        }
-    }
+	stages{
+		stage ('Build'){
+			steps{
+				sh 'mvn clean package'
+			}
+			post{
+				success{
+					echo "Archiving the artifacts"
+					archiveArtifacts artifacts: '**/target/*.war'
+				}
+			}
+		}
+		stage ('Deploy to tomcat server'){
+			steps{
+				deploy adapters: [tomcat9(credentialsId: 'TomcatCreds', path: '', url: 'http://localhost:7080')], contextPath: 'mvnPipeline', war: '**/*.war'
+			}
+		}
+	}
 }
