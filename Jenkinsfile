@@ -9,10 +9,10 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                mvn clean package
-            }
-        }
+    steps {
+        sh 'mvn clean package'
+    }
+}
 
         stage('Deploy') {
             steps {
