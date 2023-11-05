@@ -17,7 +17,7 @@ pipeline {
                 withCredentials([
                     usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
                 ]) {
-                    bat "curl -u ${tomcat}:${password} -T target/*.war http://your-tomcat-server:8080/manager/text/deploy?path=/contextPath"
+                    bat "curl -u ${tomcat}:${password} -T target/*.war http://your-tomcat-server:7080/manager/text/deploy?path=/mvnpipelines"
                 }
             }
         }
