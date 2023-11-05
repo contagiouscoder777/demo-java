@@ -2,13 +2,17 @@ pipeline {
     agent any
 
     tools {
-        maven 'MAVEN_HOME'
+        // Define your Maven installation here
+        maven 'MAVEN_HOME' // Replace 'MAVEN_HOME' with the actual name of your Maven tool
     }
 
     stages {
-        stage ('Build') {
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
+                script {
+                    // Use 'sh' to run Maven goals
+                    sh 'mvn clean package'
+                }
             }
             post {
                 success {
@@ -18,9 +22,9 @@ pipeline {
             }
         }
 
-        stage ('Deploy to Tomcat server') {
+        stage('Deploy to Tomcat server') {
             steps {
-                deploy adapters: [tomcat9(credentialsId: 'TomcatCreds', path: '', url: 'http://localhost:7080')], contextPath: 'mvnPipeline', war: '**/*.war'
+                // Add your deployment steps here
             }
         }
     }
