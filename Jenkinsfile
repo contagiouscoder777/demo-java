@@ -24,7 +24,7 @@ pipeline {
 
         stage('Deploy to Tomcat server') {
             steps {
-                // Add your deployment steps here
+                deploy adapters: [tomcat9(credentialsId: 'TomcatCreds', path: '', url: 'http://localhost:7080/')], contextPath: 'mvnPipeline', war: '**/*.war'
             }
         }
     }
