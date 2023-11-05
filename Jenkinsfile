@@ -7,10 +7,16 @@ pipeline {
 
     stages {
         stage('Build') {
-            steps {
-                bat 'mvn clean package'
+    steps {
+        script {
+            bat 'mvn clean package'
+            dir('target') {
+                bat 'dir'
             }
         }
+    }
+}
+
 
         stage('Deployment') {
             steps {
