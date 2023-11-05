@@ -9,20 +9,26 @@ pipeline {
         }
 
         stage('Build') {
-    steps {
-        sh 'mvn clean package'
-    }
-}
+            steps {
+                script {
+                    sh 'mvn clean package'
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
-                // Deploy war/ear to Tomcat server
-                withCredentials([
-                    usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
-                ]) {
-                   deploy contextPath: 'mvnPipeline', war: '**/*.war'
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
+                    ]) {
+                        sh """
+                            curl -T target/*.war http://${tomcat}:${password}@localhost:7080/manager/text/deploy?path=/mvnPipeline
+                        """
+                    }
                 }
             }
         }
     }
 }
+
