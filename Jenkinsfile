@@ -1,34 +1,26 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'MAVEN_HOME'
+    environment {
+        MAVEN_HOME = 'C:\Users\salma\Desktop\jenkins\apache-maven-3.9.5'
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
-                    sh 'mvn clean package'
+                    sh '${MAVEN_HOME}/bin/mvn clean package'
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Deployment') {
             steps {
                 script {
                     withCredentials([
                         usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
                     ]) {
-                        sh """
-                            curl -u ${tomcat}:${password} -T target/*.war http://your-tomcat-server:8080/manager/text/deploy?path=/contextPath
-                        """
+                        deploy contextPath: 'mvnPipeline', war: '**/*.war'
                     }
                 }
             }
