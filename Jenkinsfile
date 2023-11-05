@@ -20,10 +20,7 @@ pipeline {
                 withCredentials([
                     usernamePassword(credentialsId: 'TomcatCreds', usernameVariable: 'tomcat', passwordVariable: 'password')
                 ]) {
-                    sh """
-                        cp target/*.war ${TOMCAT_HOME}/webapps/
-                        sh ${TOMCAT_HOME}/bin/startup.sh
-                    """
+                   deploy contextPath: 'mvnPipeline', war: '**/*.war'
                 }
             }
         }
