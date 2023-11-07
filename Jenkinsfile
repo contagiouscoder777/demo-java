@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // Use 'sh' to run Maven goals
-                    sh 'mvn clean package'
+                    bash 'mvn clean package'
                 }
             }
             post {
